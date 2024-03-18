@@ -49,11 +49,27 @@ const navClasses = computed(() => {
     class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"
   >
     <!-- nav -->
-
+    <div id="overlay"></div>
     <navbar :class="[navClasses]" v-if="showNavbar" />
 
     <router-view />
-
+    
 
   </main>
 </template>
+
+<style>
+#overlay {
+  background: rgb(0, 0, 0);
+  width: 100%;
+  min-height: 200vh;
+  height: 100%;
+  z-index: 10;
+  position: absolute;
+  opacity: 0.5;
+  display: none;
+}
+.showOverlay{
+  display: block !important;
+}
+</style>

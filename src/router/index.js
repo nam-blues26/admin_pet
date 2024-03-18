@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
 import Tables from "../views/Tables.vue";
-import Profile from "../views/Profile.vue";
+import ProductList from "../views/Product/ProductList.vue";
+import PostList from "../views/Post/PostList.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 
@@ -22,9 +23,14 @@ const routes = [
     component: Tables,
   },
   {
-    path: "/profile",
-    name: "Profile",
-    component: Profile,
+    path: "/product/list",
+    name: "ProductList",
+    component: ProductList,
+  },
+  {
+    path: "/post/list",
+    name: "PostList",
+    component: PostList,
   },
   {
     path: "/signin",
