@@ -2,77 +2,54 @@
 
   <div class="card">
     <div class="d-flex align-items-center justify-content-between card-header pb-0">
-      <h6>Danh sách sản phẩm</h6>
-      <button class="btn btn-success d-lfex" @click="addButtonClicked()">Thêm sản phẩm</button>
+      <h6>Danh sách bài viết</h6>
+      <button class="btn btn-success d-lfex" @click="addButtonClicked()">Thêm bài viết</button>
     </div>
-    <div id="sub-content" class="product-add">
-                <ProductAdd></ProductAdd>
-              </div>
+    <div id="sub-content" class="post-add">
+      <PostAdd></PostAdd>
+    </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
               <th class="text-uppercase text-secondary font-weight-bolder opacity-9">
-                Tên sản phẩm
+                Tên bài viết
               </th>
               <th class="text-center text-uppercase text-uppercase text-secondary font-weight-bolder opacity-7">
-                Giá
+                Ngày cập nhật
               </th>
-              <th class="text-center text-uppercase text-secondary font-weight-bolder opacity-7 ps-2">
-                Sale
-              </th>
-              <th class="text-center text-uppercase text-secondary font-weight-bolder opacity-7 ps-2">
-                Đã bán
-              </th>
-              <th class="text-center text-uppercase text-secondary font-weight-bolder opacity-7">
-                Danh mục
-              </th>
-
               <th class="text-secondary opacity-7"></th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(p, index) in productList" :key="index">
+            <tr v-for="(p, index) in postList" :key="index">
               <div id="sub-content" :class="p.slug">
-                <ProductEdit :product="p"></ProductEdit>
-              </div>
+                  <PostEdit :post="p"></PostEdit>
+                </div>
               <td style="width: 25%;">
                 <div class="d-flex px-2 py-1">
                   <div>
                     <img :src="image_url + p.image" class="avatar avatar-xl me-3" alt="user1" />
                   </div>
                   <div class="d-flex flex-column justify-content-center">
-                    <h6 class="mb-0 ">{{ p.productName }}</h6>
+                    <h6 class="mb-0" style="font-size: 14px;">{{ p.postTitle }}</h6>
                     <p class="text-xs text-secondary mb-0">
-                      số lượng còn lại: {{ p.quantity }}
+                      <!-- số lượng còn lại: {{ p.quantity }} -->
                     </p>
                   </div>
                 </div>
               </td>
               <td class="align-middle text-center">
-                <p class=" font-weight-bold mb-0">Giá gốc:
-                  <span>{{ p.price }}₫</span>
+                <p class=" font-weight-bold mb-0">
+                  <span>{{ p.updatedAt }}</span>
                 </p>
-                <p class="text-secondary mb-0">sale: <span>{{ p.priceSale }}₫</span></p>
-              </td>
-              <td v-if="p.sale == 0" class="align-middle text-center">
-                <span class="badge badge-lg bg-gradient-success">Gôc</span>
-              </td>
-              <td v-else class="align-middle text-center">
-                <span class="badge badge-lg bg-gradient-danger">{{ p.sale }}%</span>
-              </td>
-              <td class="align-middle text-center">
-                <span class="text-secondary">{{ p.bought }}</span>
-              </td>
-              <td class="align-middle text-center">
-                <h6 class="text-secondary">{{ p.category.categoryName }}</h6>
               </td>
               <td class="align-middle text-center">
                 <button href="javascript:;" class="btn btn-xs btn-info mx-3"
                   @click="editButtonClicked(p.slug)">Sửa</button>
                 <button href="javascript:;" class="btn btn-xs btn-danger"
-                @click="deleteButtonClicked(p.id)">Xóa</button>
+                  @click="deleteButtonClicked(p.id)">Xóa</button>
               </td>
             </tr>
 
@@ -84,18 +61,18 @@
 
 </template>
 <script>
-import ProductService from '../../service/ProductService'
-import ProductEdit from '../Product/ProductEdit'
-import ProductAdd from '../Product/ProductAdd'
+import PostService from '../../service/PostService'
+import PostEdit from '../Post/PostEdit'
+import PostAdd from '../Post/PostAdd'
 import { API_PRODUCT_IMAGE } from "../../../config.js";
 import router from '@/router';
 export default {
   components: {
-    ProductEdit,ProductAdd
+    PostAdd,PostEdit
   },
   data() {
     return {
-      productList: {},
+      postList: [],
       image_url: API_PRODUCT_IMAGE
     }
   },
@@ -105,8 +82,17 @@ export default {
   methods: {
     async fetchData() {
       try {
-        this.productList = await ProductService.getAllProduct();
-        console.log(this.productList);
+        this.postList = await PostService.getAll();
+        this.postList.forEach(post => {
+          const [year, month, day] = post.updatedAt;
+
+                    // Định dạng ngày, tháng, năm theo định dạng dd-mm-yyyy
+                    const formattedDate = `${day < 10 ? '0' + day : day}-${month < 10 ? '0' + month : month}-${year}`;
+
+                    // Gán lại giá trị cập nhật đã được định dạng
+                    post.updatedAt = `${formattedDate}`;
+        });
+        console.log(this.postList); // In ra danh sách bài viết đã được cập nhật
       } catch (error) {
         console.error("Error fetching blog list:", error);
       }
@@ -121,13 +107,13 @@ export default {
     },
     addButtonClicked() {
       const overlay = document.getElementById("overlay");
-      const sub = document.querySelector(`#sub-content.product-add`);
+      const sub = document.querySelector(`#sub-content.post-add`);
       overlay.classList.add("showOverlay");
       sub.classList.add("showOverlay");
       console.log(sub);
     },
     async deleteButtonClicked(id) {
-      await ProductService.deleteProductById(id);
+      await PostService.deletePostById(id);
       router.go()
     }
 

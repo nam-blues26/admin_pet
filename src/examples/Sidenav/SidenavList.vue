@@ -39,6 +39,13 @@ const getRoute = () => {
                     </template>
                 </sidenav-item>
             </li>
+            <li class="nav-item">
+                <sidenav-item to="/bill/list-uncheck" :class="getRoute() === 'bill/list' ? 'active' : ''" :navText="'Quản lý hóa đơn'">
+                    <template v-slot:icon>
+                        <i class="ni ni-image text-warning text-sm opacity-10"></i>
+                    </template>
+                </sidenav-item>
+            </li>
             <li class="mt-3 nav-item">
                 <h6 class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6" :class="'ms-2'">
                     ACCOUNT PAGES

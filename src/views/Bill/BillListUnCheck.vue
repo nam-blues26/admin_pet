@@ -1,11 +1,11 @@
 <script setup>
-import PostTable from "../components/ItemPostTable";
+import BillTable from "../components/ItemBillUnCheckTable.vue";
 </script>
 <template>
   <div class="py-4 container-fluid">
     <div class="row">
       <div class="col-12">
-        <post-table />
+        <bill-table />
       </div>
     </div>
   </div>

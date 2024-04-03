@@ -3,6 +3,9 @@ import Dashboard from "../views/Dashboard.vue";
 import Tables from "../views/Tables.vue";
 import ProductList from "../views/Product/ProductList.vue";
 import PostList from "../views/Post/PostList.vue";
+import BillListUnCheck from "../views/Bill/BillListUnCheck.vue";
+import BillListCheck from "../views/Bill/BillListCheck.vue";
+import BillListCancel from "../views/Bill/BillListCancel.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 
@@ -31,6 +34,21 @@ const routes = [
     path: "/post/list",
     name: "PostList",
     component: PostList,
+  },
+  {
+    path: "/bill/list-uncheck",
+    name: "BillListUnCheck",
+    component: BillListUnCheck,
+  },
+  {
+    path: "/bill/list-check",
+    name: "BillListCheck",
+    component: BillListCheck,
+  },
+  {
+    path: "/bill/list-cancel",
+    name: "BillListCancel",
+    component: BillListCancel,
   },
   {
     path: "/signin",
