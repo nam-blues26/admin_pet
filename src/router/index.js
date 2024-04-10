@@ -6,9 +6,8 @@ import PostList from "../views/Post/PostList.vue";
 import BillListUnCheck from "../views/Bill/BillListUnCheck.vue";
 import BillListCheck from "../views/Bill/BillListCheck.vue";
 import BillListCancel from "../views/Bill/BillListCancel.vue";
-import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
-
+import VueCookies from 'vue-cookies';
 const routes = [
   {
     path: "/",
@@ -54,12 +53,7 @@ const routes = [
     path: "/signin",
     name: "Signin",
     component: Signin,
-  },
-  {
-    path: "/signup",
-    name: "Signup",
-    component: Signup,
-  },
+  }
 ];
 
 const router = createRouter({
@@ -67,5 +61,18 @@ const router = createRouter({
   routes,
   linkActiveClass: "active",
 });
+
+router.beforeEach((to, from, next) => {
+  const loggedIn = VueCookies.get('loggedIn');
+
+  // Kiểm tra nếu trang hiện tại không phải là trang đăng nhập và không có cookie loggedIn
+  if (to.name !== 'Signin' && !loggedIn) {
+    // Redirect về trang đăng nhập
+    next({ name: 'Signin' });
+  } else {
+    next();
+  }
+});
+
 
 export default router;

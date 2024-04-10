@@ -2,8 +2,13 @@
 
     <div class="card">
         <div class="d-flex align-items-center justify-content-between card-header pb-0">
-            <h6>Danh sách bài viết</h6>
-            <button class="btn btn-success d-lfex" @click="addButtonClicked()">Thêm bài viết</button>
+            <h3>Danh sách hóa đơn đã duyệt</h3>
+            <div class="bnt-bill">
+                <router-link :to="{ name: 'BillListUnCheck' }" class="btn btn-secondary d-lfex mx-4">Hóa đơn chưa
+                    duyệt</router-link>
+                <router-link :to="{ name: 'BillListCancel' }" class="btn btn-danger d-lfex">Hóa đơn đã hủy</router-link>
+
+            </div>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-0">
@@ -32,12 +37,17 @@
                     </thead>
                     <tbody>
                         <tr v-for="(p, index) in billList" :key="index">
-                            <div id="sub-content" :class="p.slug">
+                            <div id="sub-content" :class="'id'+p.id">
+                                <BillDetail :bill="p"></BillDetail>
                             </div>
                             <td style="width: 25%;">
                                 <div class="d-flex px-2 py-1">
                                     <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0" style="font-size: 14px;">{{ p.customerName }}</h6>
+                                        <h6 class="mb-0" style="font-size: 14px;">
+                                            {{ p.customerName }}
+                                            <button href="javascript:;" class="btn btn-xs btn-success"
+                                    @click="checkDetail(p.id)"><img src="../../assets/img/icons/flags/file.png" alt=""></button>
+                                        </h6>
                                         <p class="text-xs text-secondary mb-0">
                                             Số điện thoại: {{ p.phoneNumber }}
                                         </p>
@@ -55,14 +65,21 @@
                                 </p>
                             </td>
                             <td class="align-middle text-center">
-                                <div v-if="!p.active && !p.cancle" class="status-text">Đang xử lý ...</div>
-                                <div class="status-active"></div>
-                                <div class="status-cancel"></div>
+                                <div v-if="p.active && !p.cancle" class="status-text">
+                                    Đã duyệt
+                                    <img src="../../assets/img/icons/flags/checked.png" alt="">
+                                </div>
+                            </td>
+                            <td class="align-middle text-center">
+                                
+                                <button href="javascript:;" class="btn btn-xs btn-danger"
+                                    @click="cancelButtonClicked(p.id)">Hủy đơn</button>
                             </td>
                         </tr>
 
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
@@ -71,13 +88,18 @@
 <script>
 import BillService from '../../service/BillService'
 import { API_PRODUCT_IMAGE } from "../../../config.js";
+import BillDetail from '../components/BillDetail'
+import router from '@/router';
 export default {
     components: {
+        BillDetail
     },
     data() {
         return {
             billList: [],
-            image_url: API_PRODUCT_IMAGE
+            image_url: API_PRODUCT_IMAGE,
+            itemsPerPage: 1, // Số lượng sản phẩm trên mỗi trang
+            currentPage: 1 // Trang hiện tại,
         }
     },
     async created() {
@@ -86,7 +108,7 @@ export default {
     methods: {
         async fetchData() {
             try {
-                this.billList = await BillService.getAll();
+                this.billList = await BillService.getActive();
                 this.billList.forEach(post => {
                     const [year, month, day, hours, minutes] = post.updatedAt;
 
@@ -104,20 +126,17 @@ export default {
                 console.error("Error fetching blog list:", error);
             }
         },
-        editButtonClicked(slug) {
-            const dynamicClass = slug;
-            const overlay = document.getElementById("overlay");
-            const sub = document.querySelector(`#sub-content.${dynamicClass}`);
-            overlay.classList.add("showOverlay");
-            sub.classList.add("showOverlay");
-            console.log(sub);
+
+        async cancelButtonClicked(id) {
+            await BillService.cancelBill(id);
+            router.go()
         },
-        addButtonClicked() {
+        checkDetail(id) {
+            const dynamicClass = id;
             const overlay = document.getElementById("overlay");
-            const sub = document.querySelector(`#sub-content.post-add`);
+            const sub = document.querySelector(`#sub-content.id${dynamicClass}`);
             overlay.classList.add("showOverlay");
             sub.classList.add("showOverlay");
-            console.log(sub);
         },
 
     },
@@ -131,12 +150,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #sub-content {
     display: none;
     position: absolute;
     width: 80%;
-    top: -10%;
+    top: 0%;
     left: 10%;
     background-color: rgb(253, 253, 253);
     padding: 0px 10px 20px 20px;
@@ -144,5 +163,48 @@ export default {
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(97, 97, 97, 0.2), 0 6px 20px 0 rgba(109, 109, 109, 0.19);
     z-index: 100;
+}
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: calc(33.33% - 20px);
+}
+
+.page-navigation {
+    display: flex;
+    align-items: center;
+}
+
+.nav-button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.page-numbers {
+    display: flex;
+}
+
+.page-number {
+    margin: 0 2px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.page-number.active {
+    background-color: #ccc;
 }
 </style>

@@ -41,7 +41,7 @@ const ProductService = {
 			console.log(error);
 		}
 	},
-    addProduct: async (productName,productDescription, price, quantity, sale, category, files) => {
+    addProduct: async (productName,productDescription, price, quantity, sale, category, files, attribute) => {
 		try {
 			const response = await apiClientWithToken.postForm(
 				`${API_BASE_URL}/product`,
@@ -53,6 +53,7 @@ const ProductService = {
                     sale:sale,
                     category: category,
 					files: files,
+					attributeName:attribute
 				},
 				
 			);
@@ -61,7 +62,7 @@ const ProductService = {
 			return error;
 		}
 	},
-	updateProduct: async (slug,productName,productDescription, price, quantity, sale, category, files) => {
+	updateProduct: async (slug,productName,productDescription, price, quantity, sale, category, files, attribute) => {
 		try {
 			const response = await apiClientWithToken.postForm(
 				`${API_BASE_URL}/product/update/${slug}`,
@@ -73,6 +74,7 @@ const ProductService = {
                     sale:sale,
                     category: category,
 					files: files,
+					attributeName:attribute
 				},
 				
 			);
@@ -81,7 +83,7 @@ const ProductService = {
 			return error;
 		}
 	},
-	updateProductNotFile: async (slug,productName,productDescription, price, quantity, sale, category) => {
+	updateProductNotFile: async (slug,productName,productDescription, price, quantity, sale, category,attribute) => {
 		try {
 			const response = await apiClientWithToken.postForm(
 				`${API_BASE_URL}/product/update/${slug}`,
@@ -92,10 +94,26 @@ const ProductService = {
 					quantity: quantity,
                     sale:sale,
                     category: category,
+					attributeName:attribute
 				},
 				
 			);
 			return response;
+		} catch (error) {
+			return error;
+		}
+	},
+	searchProduct: async (keyword, category_id) => {
+		try {
+			const response = await axios.post(
+				`${API_BASE_URL}/product/search`,
+				{
+					keyword: keyword,
+					category_id:category_id,
+				},
+				
+			);
+			return response.data;
 		} catch (error) {
 			return error;
 		}

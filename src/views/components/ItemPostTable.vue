@@ -133,7 +133,7 @@ export default {
   display: none;
   position: absolute;
   width: 80%;
-  top: -10%;
+  top: 0%;
   left: 10%;
   background-color: rgb(253, 253, 253);
   padding: 0px 10px 20px 20px;

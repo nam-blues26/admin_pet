@@ -1,5 +1,5 @@
 <script setup>
-import BillTable from "../components/ItemBillUnCheckTable.vue";
+import BillTable from "../components/ItemBillCheckTable.vue";
 </script>
 <template>
   <div class="py-4 container-fluid">

@@ -61,14 +61,17 @@
                             <label class="custom-file-label" for="exampleInputFile">Choose
                                 file</label>
                         </div>
-                        <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
-                        </div>
                     </div>
                     <div>
                         <img v-if="imageUrl" :src="imageUrl" alt="product image" class="selected-image">
                         <!-- <img v-else :src="image_url +.image" alt="product image" class="selected-image"> -->
 
+                    </div>
+                    <div class="col-md-3"><label for="example-text-input" class="form-control-label">Danh sách loại (ví dụ nhập: màu xanh, màu hống)</label>
+                        <div class="input-group">
+                            <input type="text" id="input" class="form-control" v-model="attribute">
+                            
+                        </div>
                     </div>
                 </div>
                 <Editor api-key="0r58vwjfbkl9vvvllac20tkbtqdzdjr8k0206v18up1vnoe3" :init="{
@@ -107,7 +110,8 @@ export default {
             image_url: API_PRODUCT_IMAGE,
             file: null,
             category_id:null,
-            quantity:0
+            quantity:0,
+            attribute:''
         };
     },
     async created() {
@@ -145,7 +149,7 @@ export default {
 
                 console.log("Have file");
                 console.log(this.productName, this.productDescription, this.price, this.quantity, this.sale, this.category_id, this.file);
-                const response = await ProductService.addProduct(this.productName, this.productDescription, this.price, this.quantity, this.sale, this.category_id, this.file);
+                const response = await ProductService.addProduct(this.productName, this.productDescription, this.price, this.quantity, this.sale, this.category_id, this.file, this.attribute);
                 if (response.status == 201) {
                     Swal.fire({
                         icon: 'success',

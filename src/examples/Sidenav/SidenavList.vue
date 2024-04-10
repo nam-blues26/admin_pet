@@ -52,22 +52,33 @@ const getRoute = () => {
                 </h6>
             </li>
 
-            <li class="nav-item">
-                <sidenav-item to="/signin" :class="getRoute() === 'signin' ? 'active' : ''" :navText="'Sign In'">
-                    <template v-slot:icon>
-                        <i class="ni ni-single-copy-04 text-danger text-sm opacity-10"></i>
-                    </template>
-                </sidenav-item>
+            <li class="px-6 nav-item">
+                <button class="btn btn-danger" @click="logout()">Log out</button>
             </li>
 
-            <li class="nav-item">
-                <sidenav-item to="/signup" :class="getRoute() === 'signup' ? 'active' : ''" :navText="'Sign Up'">
-                    <template v-slot:icon>
-                        <i class="ni ni-collection text-info text-sm opacity-10"></i>
-                    </template>
-                </sidenav-item>
-            </li>
         </ul>
     </div>
 
 </template>
+
+<script>
+import VueCookies from 'vue-cookies';
+import router from '@/router';
+export default {
+    components: {
+    },
+    data() {
+        return {
+           
+        }
+    },
+    methods: {
+        logout() {
+            VueCookies.remove('loggedIn');
+            router.push({ path: '/signin' })
+        },
+
+    },
+
+}
+</script>

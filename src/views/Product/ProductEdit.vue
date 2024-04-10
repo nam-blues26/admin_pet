@@ -5,8 +5,7 @@
             <div class="card-header pb-0">
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="mb-0">Sửa sản phẩm</h4>
-                    <a class="btn" @click="closeOverlay"><i class="ni ni-fat-remove"
-                            style="font-size: 30px;"></i></a>
+                    <a class="btn" @click="closeOverlay"><i class="ni ni-fat-remove" style="font-size: 30px;"></i></a>
                 </div>
             </div>
             <div class="card-body">
@@ -48,7 +47,7 @@
                         <select class="form-control" required v-model="productObject.category.id">
                             <option value="" selected disabled hidden>Choose here</option>
                             <option v-for="(cate, index) in categoryList" :key="index" :value="cate.id">{{
-        cate.categoryName }}</option>
+                                cate.categoryName }}</option>
                         </select>
                     </div>
                 </div>
@@ -61,19 +60,23 @@
                             <label class="custom-file-label" for="exampleInputFile">Choose
                                 file</label>
                         </div>
-                        <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
-                        </div>
                     </div>
                     <div>
                         <img v-if="imageUrl" :src="imageUrl" alt="product image" class="selected-image">
                         <img v-else :src="image_url + productObject.image" alt="product image" class="selected-image">
 
                     </div>
+                    <div class="col-md-3"><label for="example-text-input" class="form-control-label">Danh sách loại (ví
+                            dụ nhập: màu xanh, màu hống)</label>
+                        <div class="input-group">
+                            <input type="text" id="input" class="form-control" v-model="productObject.attributeName">
+
+                        </div>
+                    </div>
                 </div>
                 <Editor api-key="0r58vwjfbkl9vvvllac20tkbtqdzdjr8k0206v18up1vnoe3" :init="{
-        plugins: 'lists link image table code help wordcount'
-    }" v-model="productObject.productDescription" />
+                    plugins: 'lists link image table code help wordcount'
+                }" v-model="productObject.productDescription" />
                 <div class="card-footer">
                     <button type="submit" value="Submit" class="btn btn-primary">Submit</button>
                 </div>
@@ -109,7 +112,6 @@ export default {
         // Gọi API để lấy danh sách cate
         try {
             this.categoryList = await CategoryService.getCategoriesStore();
-            console.log(this.categoryList);
         } catch (error) {
             console.error("Error fetching blog list:", error);
         }
@@ -140,8 +142,7 @@ export default {
 
             if (this.file !== null) {
                 console.log("Have file");
-                console.log(this.productObject.slug, this.productObject.productName, this.productObject.productDescription, this.productObject.price, this.productObject.quantity, this.productObject.sale, this.productObject.category.id, this.file);
-                const response = await ProductService.updateProduct(this.productObject.slug, this.productObject.productName, this.productObject.productDescription, this.productObject.price, this.productObject.quantity, this.productObject.sale, this.productObject.category.id, this.file);
+                const response = await ProductService.updateProduct(this.productObject.slug, this.productObject.productName, this.productObject.productDescription, this.productObject.price, this.productObject.quantity, this.productObject.sale, this.productObject.category.id, this.file, this.productObject.attributeName);
                 if (response.status == 200) {
                     Swal.fire({
                         icon: 'success',
@@ -159,8 +160,7 @@ export default {
             }
             else {
                 console.log("Not file");
-                console.log(this.productObject.slug, this.productObject.productName, this.productObject.productDescription, this.productObject.price, this.productObject.quantity, this.productObject.sale, this.productObject.category.id);
-                const response = await ProductService.updateProductNotFile(this.productObject.slug, this.productObject.productName, this.productObject.productDescription, this.productObject.price, this.productObject.quantity, this.productObject.sale, this.productObject.category.id);
+                const response = await ProductService.updateProductNotFile(this.productObject.slug, this.productObject.productName, this.productObject.productDescription, this.productObject.price, this.productObject.quantity, this.productObject.sale, this.productObject.category.id, this.productObject.attributeName);
                 if (response.status == 200) {
                     Swal.fire({
                         icon: 'success',
@@ -174,7 +174,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Sửa bài viết thất bại!',
-                        
+
                     }).then(() => {
                         // Chuyển hướng đến trang /login sau khi nhấp vào nút "OK" trên thông báo
                         router.go()

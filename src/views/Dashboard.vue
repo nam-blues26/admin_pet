@@ -1,71 +1,71 @@
 <script setup>
-import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
 import GradientLineChart from "@/examples/Charts/GradientLineChart.vue";
+import BillService from '../service/BillService.js';
+
+// Sử dụng ref để tạo biến trạng thái
+import { ref, onMounted } from 'vue';
+
+const billList = ref([]);
+const dates = ref([]);
+const count_bought = ref([]);
+const count_cancel = ref([]);
+// const data_chart = ref([50, 40, 200, 320, 400]);
+
+// Tạo một biến để kiểm soát việc render
+const isDataLoaded = ref(false);
+
+// Phương thức fetch dữ liệu
+const fetchData = async () => {
+  try {
+    billList.value = await BillService.getStatistic();
+    dates.value = billList.value.map(item => item.date);
+    count_bought.value = billList.value.map(item => item.count_bought);
+    count_cancel.value = billList.value.map(item => item.count_cancel);
+    // Gán biến kiểm soát render thành true khi dữ liệu đã được fetch
+    isDataLoaded.value = true;
+  } catch (error) {
+    console.error("Error fetching blog list:", error);
+  }
+}
+
+// Sử dụng hook onMounted để fetch dữ liệu khi component được mounted
+onMounted(() => {
+  fetchData();
+});
 </script>
+
 <template>
   <div class="py-4 container-fluid">
     <div class="row">
       <div class="col-lg-12">
         <div class="row">
-          <div class="col-lg-3 col-md-6 col-12">
-            <mini-statistics-card title="Today's Money" value="$53,000" description="<span
-                class='text-sm font-weight-bolder text-success'
-                >+55%</span> since yesterday" :icon="{
-                  component: 'ni ni-money-coins',
-                  background: 'bg-gradient-primary',
-                  shape: 'rounded-circle',
-                }" />
-          </div>
-          <div class="col-lg-3 col-md-6 col-12">
-            <mini-statistics-card title="Today's Users" value="2,300" description="<span
-                class='text-sm font-weight-bolder text-success'
-                >+3%</span> since last week" :icon="{
-                  component: 'ni ni-world',
-                  background: 'bg-gradient-danger',
-                  shape: 'rounded-circle',
-                }" />
-          </div>
-          <div class="col-lg-3 col-md-6 col-12">
-            <mini-statistics-card title="New Clients" value="+3,462" description="<span
-                class='text-sm font-weight-bolder text-danger'
-                >-2%</span> since last quarter" :icon="{
-                  component: 'ni ni-paper-diploma',
-                  background: 'bg-gradient-success',
-                  shape: 'rounded-circle',
-                }" />
-          </div>
+          <!-- Các mini-statistics-card -->
         </div>
         <div class="row">
-          <div class="col-lg-7 mb-lg">
-            <!-- line chart -->
-            <div class="card z-index-2">
-              <gradient-line-chart id="chart-line" title="Sales Overview" description="<i class='fa fa-arrow-up text-success'></i>
-      <span class='font-weight-bold'>4% more</span> in 2021" :chart="{
-                  labels: [
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec',
-                  ],
-                  datasets: [
-                    {
-                      label: 'Mobile Apps',
-                      data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                    },
-                  ],
-                }" />
+          <div class="col mb-lg">
+            <!-- Kiểm tra nếu dữ liệu đã được fetch trước khi render gradient-line-chart -->
+            <div v-if="isDataLoaded">
+              <div class="card z-index-2">
+                <gradient-line-chart id="chart-line" title="Thống kê hóa đơn" :chart="{
+                    labels: dates,
+                    datasets: [
+                      {
+                        label: 'Bán',
+                        data: count_bought,
+                      },
+                      {
+                        label: 'Hủy',
+                        data: count_cancel,
+                      },
+                    ],
+                  }" />
+              </div>
+            </div>
+            <!-- Hiển thị một thông báo hoặc spinner trong khi đang fetch dữ liệu -->
+            <div v-else>
+              Loading...
             </div>
           </div>
-
-          <!-- <carousel /> -->
-          <div class="col-lg-5">
-          </div>
-
         </div>
       </div>
     </div>
