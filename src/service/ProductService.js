@@ -41,6 +41,15 @@ const ProductService = {
 			console.log(error);
 		}
 	},
+
+	getBestSeller: async () => {
+		try {
+			const response = await axios.get(`${API_BASE_URL}/product/best-seller`);
+			return response.data;
+		} catch (error) {
+			console.log(error);
+		}
+	},
     addProduct: async (productName,productDescription, price, quantity, sale, category, files, attribute) => {
 		try {
 			const response = await apiClientWithToken.postForm(
