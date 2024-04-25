@@ -24,6 +24,10 @@
                             <th class="text-center text-uppercase text-secondary font-weight-bolder opacity-7">
                                 Ngày đặt
                             </th>
+                            <th
+                                class="text-center text-uppercase text-uppercase text-secondary font-weight-bolder opacity-7">
+                                Phương thức thanh toán
+                            </th>
                             <th class="text-center text-uppercase  text-secondary font-weight-bolder opacity-7">
                                 Trạng thái
                             </th>
@@ -62,9 +66,15 @@
                                 </p>
                             </td>
                             <td class="align-middle text-center">
+                                <div v-if="p.typePayment == 'COD'" class="status-text">
+                                    <img src="../../assets/img/icons/flags/cash-on-delivery.png" alt="">
+                                </div>
+                                <div v-if="p.typePayment == 'BANK'" class="status-text">
+                                    <img src="../../assets/img/icons/flags/mobile-banking.png" alt="">
+                                </div>
+                            </td>
+                            <td class="align-middle text-center">
                                 <div v-if="!p.active && !p.cancle" class="status-text">Đang xử lý ...</div>
-                                <div class="status-active"></div>
-                                <div class="status-cancel"></div>
                             </td>
                             <td class="align-middle text-center">
                                 <button href="javascript:;" class="btn btn-xs btn-info mx-3"

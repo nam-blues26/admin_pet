@@ -29,6 +29,10 @@
                             </th>
                             <th
                                 class="text-center text-uppercase text-uppercase text-secondary font-weight-bolder opacity-7">
+                                Phương thức thanh toán
+                            </th>
+                            <th
+                                class="text-center text-uppercase text-uppercase text-secondary font-weight-bolder opacity-7">
                                 Trạng thái
                             </th>
                             <th class="text-secondary opacity-7">
@@ -64,6 +68,14 @@
                                 <p class=" font-weight-bold mb-0">
                                     <span>{{ p.updatedAt }}</span>
                                 </p>
+                            </td>
+                            <td class="align-middle text-center">
+                                <div v-if="p.typePayment == 'COD'" class="status-text">
+                                    <img src="../../assets/img/icons/flags/cash-on-delivery.png" alt="">
+                                </div>
+                                <div v-if="p.typePayment == 'BANK'" class="status-text">
+                                    <img src="../../assets/img/icons/flags/mobile-banking.png" alt="">
+                                </div>
                             </td>
                             <td class="align-middle text-center">
                                 <div class="status-text">
