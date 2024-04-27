@@ -25,17 +25,17 @@
                     <td v-if="item.attributeName" class="align-middle text-center">{{ item.attributeName }}</td>
                     <td v-else class="align-middle text-center"></td>
                     <td class="align-middle text-center">{{ item.quantity }}</td>
-                    <td class="align-middle text-center">{{ item.product.priceSale }} ₫ </td>
-                    <td class="align-middle text-center">{{ item.quantity * item.product.priceSale }} ₫ </td>
+                    <td class="align-middle text-center">{{ numberWithCommas(item.product.priceSale) }} ₫ </td>
+                    <td class="align-middle text-center">{{ numberWithCommas(item.quantity * item.product.priceSale) }} ₫ </td>
                 </tr>
             </tbody>
         </table>
         <div>
-            <strong>Ghi chú:</strong> {{ billObject.note }} 
+            <strong>Ghi chú:</strong> {{ billObject.note }}
         </div>
         <hr>
         <div>
-            <strong>Tổng số tiền:</strong> {{ billObject.totalPrice }} ₫ 
+            <strong>Tổng số tiền:</strong> {{ numberWithCommas(billObject.totalPrice) }} ₫
         </div>
     </div>
 </template>
@@ -56,6 +56,9 @@ export default {
             overlay.classList.remove("showOverlay")
             sub.classList.remove("showOverlay")
         },
+        numberWithCommas(x) {
+            return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        }
     }
 };
 </script>
